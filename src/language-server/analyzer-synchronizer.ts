@@ -15,9 +15,8 @@
 import {Analysis, Analyzer, AnalyzerOptions, ResolvedUrl, UrlResolver} from 'polymer-analyzer';
 import {AnalysisCache} from 'polymer-analyzer/lib/core/analysis-cache';
 import {AnalysisContext} from 'polymer-analyzer/lib/core/analysis-context';
+import {AnalyzeOptions} from 'polymer-analyzer/lib/core/analyzer';
 import {FileChangeType, FileEvent, TextDocuments} from 'vscode-languageserver';
-
-import {AnalyzeOptions} from '../../../analyzer/lib/core/analyzer';
 
 import AnalyzerLSPConverter from './converter';
 import FileSynchronizer from './file-synchronizer';
