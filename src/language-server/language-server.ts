@@ -45,16 +45,7 @@ export default class LanguageServer extends Handler {
   static async initializeWithConnection(
       connection: IConnection,
       loggingOptions: LoggingOptions): Promise<LanguageServer> {
-    function getWorkspaceUri(
-        rootUri: string|null, rootPath: string|null|undefined): Uri|null {
-      if (rootUri) {
-        return Uri.parse(rootUri);
-      }
-      if (rootPath) {
-        return Uri.file(rootPath);
-      }
-      return null;
-    }
+    console.log('initializeWithConnection called');
 
     // When we get an initialization request we want to construct a server and
     // tell the client about its capabilities.
@@ -180,4 +171,15 @@ export default class LanguageServer extends Handler {
     }
     return ourCapabilities;
   }
+}
+
+function getWorkspaceUri(
+    rootUri: string|null, rootPath: string|null|undefined): Uri|null {
+  if (rootUri) {
+    return Uri.parse(rootUri);
+  }
+  if (rootPath) {
+    return Uri.file(rootPath);
+  }
+  return null;
 }

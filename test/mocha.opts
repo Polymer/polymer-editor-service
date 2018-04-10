@@ -1,3 +1,4 @@
 --ui tdd
 --require source-map-support/register
+--color
 lib/test/*_test.js lib/test/**/*_test.js

@@ -1,33 +1,36 @@
-/**
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
+import {Duplex} from 'stream';
+import {CancellationToken} from 'vscode-jsonrpc';
+import {createConnection} from 'vscode-languageserver';
+import {InitializeParams, InitializeRequest} from 'vscode-languageserver-protocol';
+import URI from 'vscode-uri';
 
-import {assert} from 'chai';
-import {readFileSync} from 'fs';
-import {join} from 'path';
+class TestStream extends Duplex {
+  _write(chunk: string, _encoding: string, done: () => void) {
+    this.emit('data', chunk);
+    done();
+  }
 
-import {createTestEnvironment, delay} from './util';
+  _read(_size: number) {
+  }
+}
 
-suite('Logger', () => {
+suite('vscode languageserver initialization', () => {
 
-  test('will log to a file when asked to', async() => {
-    const {client, baseDir} = await createTestEnvironment();
-    const logFile = join(baseDir, 'pes.log');
-    await client.changeConfiguration({logToFile: logFile});
-    await delay(100);
-    assert.match(
-        readFileSync(logFile, 'utf-8'),
-        /^\n\n\n\n\nInitialized with workspace path:/);
-    await client.cleanup();
+  test.only('works', async() => {
+    const up = new TestStream();
+    const down = new TestStream();
+    const serverConnection = createConnection(up, down);
+    const clientConnection = createConnection(down, up);
+    serverConnection.listen();
+    clientConnection.listen();
+
+    const init: InitializeParams = {
+      rootUri: URI.file(process.cwd()).toString(),
+      processId: 1,
+      capabilities: {},
+      workspaceFolders: null,
+    };
+    await clientConnection.sendRequest(InitializeRequest.type, init);
   });
 
 });

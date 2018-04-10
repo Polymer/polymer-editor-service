@@ -153,7 +153,6 @@ export const defaultClientCapabilities: ClientCapabilities = {
         commitCharactersSupport: false,
       },
       contextSupport: false,
-
     },
     synchronization: {didSave: true, willSave: true, willSaveWaitUntil: true},
     implementation: {dynamicRegistration: false},
@@ -217,9 +216,7 @@ export class TestClient {
       // process.exit after a timeout if the given process id
       // does not exist!! It handles `null` just fine though.
       processId: null as any as number,
-      initializationOptions: {},
-      // It looks like the typechecker is messing up here?
-      capabilities,
+      initializationOptions: {}, capabilities,
       workspaceFolders: null,
     };
     return this.connection.sendRequest(InitializeRequest.type, init);
@@ -451,14 +448,14 @@ class MapSetDefault<K, V> extends Map<K, V> {
 }
 
 /** Duplex stream that optionally logs content. */
-class TestStream extends Duplex {
+export class TestStream extends Duplex {
   constructor(public name: string, private debugging?: boolean) {
     super();
   }
 
   _write(chunk: string, _encoding: string, done: () => void) {
     if (this.debugging) {
-      console.log(`this.name writes: ${chunk}`);
+      console.log(`${this.name} writes: ${chunk}`);
     }
     this.emit('data', chunk);
     done();
